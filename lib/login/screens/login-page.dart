@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:registration_ui2/login/model/user-info.dart';
+import 'package:registration_ui2/login/screens/profile-page.dart';
 import '../animation/fade-animation.dart';
+import '../services/http-service.dart';
 
 class LoginPage extends StatelessWidget {
+  final eMailController = TextEditingController();
+  final passController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Container(
         child: Column(
@@ -117,6 +131,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                               child: TextField(
+                                controller: eMailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Email or Phone',
@@ -129,6 +144,7 @@ class LoginPage extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(8),
                               child: TextField(
+                                controller: passController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Password',
@@ -145,29 +161,49 @@ class LoginPage extends StatelessWidget {
                     height: 30,
                   ),
                   FadeAnimation(
-                      2,
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromRGBO(143, 148, 251, 1),
-                              Color.fromRGBO(143, 148, 251, .3),
-                            ],
-                          ),
+                    2,
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromRGBO(143, 148, 251, 1),
+                            Color.fromRGBO(143, 148, 251, .3),
+                          ],
                         ),
-                        child: Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white,
+                      ),
+                      child: Container(
+                        color: Colors.transparent,
+                        child: FlatButton(
+                          onPressed: () async {
+                            MyService service = new MyService();
+                            // called controller here
+                            UserInfo userInfo = await service.httpService(
+                              eMailController.text,
+                              passController.text,
+                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ProfilePage(userInfo),
+                              ),
+                            );
+                          },
+                          color: Colors.transparent,
+                          child: Center(
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 15,
                   ),
